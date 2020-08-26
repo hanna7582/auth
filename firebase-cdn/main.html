@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <div>
+    <h1>메인페이지</h1>
+    <button onclick="logout()">로그아웃</button>
+    <ul id="user">      
+    </ul>
+  </div>
+
+  <script src="https://www.gstatic.com/firebasejs/6.2.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/6.2.0/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/6.2.0/firebase-firestore.js"></script>
+  <script src="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.js"></script>
+  <link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.css" />  
+  <script>
+    var firebaseConfig = {
+      apiKey: "AIzaSyA3daA8VUyREsD6J1RgpzqU1FNdFYCBlBA",
+      authDomain: "auth-4faec.firebaseapp.com",
+      databaseURL: "https://auth-4faec.firebaseio.com",
+      projectId: "auth-4faec",
+      storageBucket: "auth-4faec.appspot.com",
+      messagingSenderId: "149425374274",
+      appId: "1:149425374274:web:9cd7313945ed44ecef99db",
+      measurementId: "G-HNZJ91JBW0"
+    };
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    
+    var user=null;
+    // user 정보
+    firebase.auth().onAuthStateChanged((user) => {
+      if (user != null) {
+        console.log(user);
+        user={
+          name : user.displayName,
+          email : user.email,
+          photoUrl : user.photoURL,
+          emailVerified : user.emailVerified,
+          uid : user.uid,  
+        }
+        document.getElementById('user').innerHTML=`
+          <li>user <span>${user.name}</span></li>    
+          <li>email <span>${user.email}</span></li>    
+          <li>photo <img src="${user.photoUrl}"></li>    
+        `
+      }else{
+        location.href="signin.html";
+      }
+    });
+
+    function logout() {      
+      firebase.auth().signOut().then(() => {
+        location.href="signin.html";
+      }).catch(function(error) {
+        console.log(error);
+      });
+    }
+  </script>
+</body>
+</html>
